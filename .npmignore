@@ -2,7 +2,9 @@
 /vendor
 /docs
 node_modules
-/fonts
+
+# fixes #874
+# /fonts
 
 .bower-cache
 .bower-registry
@@ -11,6 +13,17 @@ node_modules
 .bowerrc
 .sass-cache
 
+dist/.gitkeep
+dist/*.zip
+
 nodemon.json
 composer.json
 bower.json
+
+.editorconfig
+.jscsrc
+.jshintrc
+.npmignore
+.travis.yml
+CONTRIBUTING.md
+gulpfile.js

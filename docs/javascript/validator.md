@@ -562,15 +562,17 @@ $(function() {
   var $tooltip = $('<div id="vld-tooltip">提示信息！</div>');
   $tooltip.appendTo(document.body);
 
-  $form.validator();
-
-  var validator = $form.data('amui.validator');
+  $form.validator({
+    onValid: function() {
+      $tooltip.hide();
+    }
+  });
 
   $form.on('focusin focusout', '.am-form-error input', function(e) {
     if (e.type === 'focusin') {
       var $this = $(this);
       var offset = $this.offset();
-      var msg = $this.data('foolishMsg') || validator.getValidationMessage($this.data('validity'));
+      var msg = $this.data('foolishMsg') || $form.validator('getValidationMessage', $this.data('validity'));
 
       $tooltip.text(msg).show().css({
         left: offset.left + 10,
@@ -837,7 +839,7 @@ return $.ajax({
         if ($(validity.field).is('.js-ajax-validate')) {
           // 异步操作必须返回 Deferred 对象
           return $.ajax({
-            url: 'http://7jpqbr.com1.z0.glb.clouddn.com/validate.json',
+            url: 'http://s.amazeui.org/media/i/demos/validate.json',
             // cache: false, 实际使用中请禁用缓存
             dataType: 'json'
           }).then(function(data) {
@@ -881,7 +883,7 @@ $(function() {
       if ($(validity.field).is('.js-ajax-validate')) {
         // 异步操作必须返回 Deferred 对象
         return $.ajax({
-          url: 'http://7jpqbr.com1.z0.glb.clouddn.com/validate.json',
+          url: 'http://s.amazeui.org/media/i/demos/validate.json',
           // cache: false, 实际使用中请禁用缓存
           dataType: 'json'
         }).then(function(data) {
@@ -898,6 +900,117 @@ $(function() {
         // return validity;
       }
     }
+  });
+});
+```
+
+### 验证 UEditor
+
+Validator 可以和 [UEditor](http://ueditor.baidu.com/) 富文本编辑器结合使用。
+
+`````html
+<form action="" class="am-form" id="ue-form">
+  <fieldset>
+    <legend>JS 表单验证</legend>
+    <div class="am-form-group">
+      <label for="doc-vld-name-2">用户名：</label>
+      <input type="text" id="doc-vld-name-2" minlength="3" placeholder="输入用户名（至少 3 个字符）" required/>
+    </div>
+    <div class="am-form-group">
+      <label for="doc-vld-ta-2">评论：</label>
+      <textarea class="am-validate" name="myue" id="myue" minlength="10" maxlength="100" required></textarea>
+    </div>
+
+    <button class="am-btn am-btn-secondary" type="submit">提交</button>
+  </fieldset>
+</form>
+<script src="http://ueditor.baidu.com/ueditor/ueditor.config.js"></script>
+<script src="http://ueditor.baidu.com/ueditor/ueditor.all.js"></script>
+<script>
+  $(function() {
+    var $textArea = $('[name=myue');
+    var editor = UE.getEditor('myue');
+    var $form = $('#ue-form');
+
+    $form.validator({
+      submit: function() {
+        // 同步编辑器数据
+        editor.sync();
+
+        var formValidity = this.isFormValid();
+
+        // 表单验证未成功，而且未成功的第一个元素为 UEEditor 时，focus 编辑器
+        if (!formValidity && $form.find('.' + this.options.inValidClass).eq(0).is($textArea)) {
+          editor.focus();
+        }
+
+        console.warn('验证状态：', formValidity ? '通过' : '未通过');
+
+        return false;
+      }
+    });
+
+    // 编辑器内容变化时同步到 textarea
+    editor.addListener('contentChange', function() {
+      editor.sync();
+
+      // 触发验证
+      $('[name=myue]').trigger('change');
+    });
+  });
+</script>
+`````
+
+```html
+<form action="" class="am-form" id="ue-form">
+  <fieldset>
+    <legend>JS 表单验证</legend>
+    <div class="am-form-group">
+      <label for="doc-vld-name-2">用户名：</label>
+      <input type="text" id="doc-vld-name-2" minlength="3" placeholder="输入用户名（至少 3 个字符）" required/>
+    </div>
+    <div class="am-form-group">
+      <label for="doc-vld-ta-2">评论：</label>
+      <textarea class="am-validate" name="myue" id="myue" required></textarea>
+    </div>
+
+    <button class="am-btn am-btn-secondary" type="submit">提交</button>
+  </fieldset>
+</form>
+<script src="http://ueditor.baidu.com/ueditor/ueditor.config.js"></script>
+<script src="http://ueditor.baidu.com/ueditor/ueditor.all.js"></script>
+```
+
+```javascript
+$(function() {
+  var $textArea = $('[name=myue');
+  var editor = UE.getEditor('myue');
+  var $form = $('#ue-form');
+
+  $form.validator({
+    submit: function() {
+      // 同步编辑器数据
+      editor.sync();
+
+      var formValidity = this.isFormValid();
+
+      // 表单验证未成功，而且未成功的第一个元素为 UEEditor 时，focus 编辑器
+      if (!formValidity && $form.find('.' + this.options.inValidClass).eq(0).is($textArea)) {
+        editor.focus();
+      }
+
+      console.warn('验证状态：', formValidity ? '通过' : '未通过');
+
+      return false;
+    }
+  });
+
+  // 编辑器内容变化时同步到 textarea
+  editor.addListener('contentChange', function() {
+    editor.sync();
+
+    // 触发验证
+    $('[name=myue]').trigger('change');
   });
 });
 ```
@@ -947,7 +1060,13 @@ $(function() {
   // 表单提交时验证的域
   // Elements to validate with allValid (only validating visible elements)
   // :input: selects all input, textarea, select and button elements.
-  allFields: ':input:visible:not(:button, :disabled, .am-novalidate)',
+  // @since 2.5: move `:visible` to `ignore` option, became to `:hidden`
+  allFields: ':input:not(:button, :disabled, .am-novalidate)',
+
+  // 表单提交时验证的忽略的域
+  // ignored elements
+  // @since 2.5
+  ignore: ':hidden:not([data-am-selected], .am-validate)',
 
   // 调用 validate() 方法的自定义事件
   customEvents: 'validate',
@@ -1022,6 +1141,24 @@ $(function() {
 }
 ```
 
+**包含异步验证的表单提交处理**
+
+包含异步验证时，`isFormValid()` 返回 Promise，可以使用 [`jQuery.when()`](http://api.jquery.com/jQuery.when/) 来处理结果。
+
+```js
+$('#xx').validator({
+  submit: function() {
+    var formValidity = this.isFormValid();
+
+    $.when(formValidity).then(function() {
+      // 验证成功的逻辑
+    }, function() {
+      // 验证失败的逻辑
+    });
+  }
+});
+```
+
 #### 扩展正则库
 
 在 DOM Ready 之前执行以下操作：
@@ -1081,6 +1218,21 @@ $(function() {
   </div>
 </form>
 ```
+
+### 方法
+
+- `.validator(options)` - 初始化表单验证
+- `.validator('isFormValid')` - 返回表单验证状态，如果包含异步验证则返回 Promise（使用 `jQuery.when` 处理），否则返回布尔值
+
+  ```js
+  // 处理异步验证结果
+  $.when($('myForm').validator('isFormValid')).then(function() {
+    // 验证成功的逻辑
+  }, function() {
+    // 验证失败的逻辑
+  });
+  ```
+- `.validator('destroy')` - 销毁表单验证
 
 ## Issue 测试
 

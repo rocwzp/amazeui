@@ -1,12 +1,10 @@
-/* jshint node: true */
 'use strict';
 
 var path = require('path');
 var fs = require('fs');
 var _ = require('lodash');
 var format = require('util').format;
-var browserify = require('browserify');
-var transform = require('vinyl-transform');
+var webpack = require('webpack-stream');
 var del = require('del');
 var runSequence = require('run-sequence');
 var gulp = require('gulp');
@@ -56,7 +54,7 @@ var less = [
   '@import "base.less";'
 ];
 var js = [
-  'require("./core");'
+  'require("../../js/core");'
 ];
 
 gulp.task('customizer:preparing', function(callback) {
@@ -65,7 +63,7 @@ gulp.task('customizer:preparing', function(callback) {
   });
 
   config.js.forEach(function(file) {
-    js.push(format('require("./%s");', file));
+    js.push(format('require("../../js/%s");', file));
   });
 
   // widgets
@@ -77,7 +75,11 @@ gulp.task('customizer:preparing', function(callback) {
     }
 
     config.widgets.forEach(function(widget) {
-      js.push(format('require("./%s");', widget.name));
+      js.push(format(
+        'require("../../widget/%s/src/%s");',
+        widget.name,
+        widget.name)
+      );
       less.push(format('@import "../../widget/%s/src/%s.less";',
         widget.name, widget.name));
       var pkg = require(path.join('../../widget', widget.name, 'package.json'));
@@ -102,7 +104,7 @@ gulp.task('customizer:preparing', function(callback) {
 });
 
 gulp.task('customizer:less', function() {
-  gulp.src(DEFAULTS.less)
+  return gulp.src(DEFAULTS.less)
     .pipe($.less({
       paths: [
         path.join(__dirname, '../../less')
@@ -114,7 +116,10 @@ gulp.task('customizer:less', function() {
     }))
     .pipe(gulp.dest(cstmzPath))
     .pipe($.size({showFiles: true, title: 'source'}))
-    .pipe($.minifyCss({noAdvanced: true}))
+    .pipe($.cleanCss({
+      advanced: false,
+      compatibility: 'ie8'
+    }))
     .pipe($.rename({
       suffix: '.min',
       extname: '.css'
@@ -124,62 +129,39 @@ gulp.task('customizer:less', function() {
     .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
 });
 
-gulp.task('customizer:js', function(cb) {
-  runSequence(
-    [
-      'customizer:js:copy:core',
-      'customizer:js:copy:widgets'
-    ],
-    'customizer:js:browserify',
-    cb);
-});
-
-// Copy ui js files to build dir.
-gulp.task('customizer:js:copy:widgets', function() {
-  $.util.log($.util.colors.yellow('Start copy widgets js to build dir....'));
-  return gulp.src([
-    '*/src/*.js',
-    '!{layout*,blank,container}' +
-    '/src/*.js'], {cwd: './widget'})
-    .pipe($.rename(function(path) {
-      path.dirname = ''; // remove widget dir
+gulp.task('customizer:js', function() {
+  return gulp.src(DEFAULTS.js)
+    .pipe(webpack({
+      output: {
+        filename: 'amazeui.custom.js',
+        library: 'AMUI',
+        libraryTarget: 'umd'
+      },
+      externals: [
+        {
+          jquery: {
+            root: 'jQuery',
+            commonjs2: 'jquery',
+            commonjs: 'jquery',
+            amd: 'jquery'
+          }
+        }
+      ]
     }))
-    .pipe(gulp.dest(DEFAULTS.tmp + '/js'));
-});
-
-// Copy core js files to build dir.
-gulp.task('customizer:js:copy:core', function() {
-  return gulp.src('*.js', {
-    cwd: './js'
-  })
-    .pipe(gulp.dest(DEFAULTS.tmp + '/js'));
-});
-
-gulp.task('customizer:js:browserify', function() {
-  var bundler = transform(function(filename) {
-    var b = browserify({
-      entries: filename,
-      basedir: path.join(__dirname, DEFAULTS.tmp, 'js')
-    });
-    return b.bundle();
-  });
-
-  return gulp.src(DEFAULTS.js,
-    {cwd: path.join(__dirname, DEFAULTS.tmp, 'js')})
-    .pipe(bundler)
     .pipe(gulp.dest(cstmzPath))
-    .pipe($.uglify())
-    .pipe($.rename({
-      suffix: '.min',
-      extname: '.js'
+    .pipe($.uglify({
+      output: {
+        ascii_only: true
+      }
     }))
+    .pipe($.rename({suffix: '.min'}))
     .pipe(gulp.dest(cstmzPath))
     .pipe($.size({showFiles: true, title: 'minified'}))
     .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
 });
 
-gulp.task('customizer:clean', function(cb) {
-  del(DEFAULTS.tmp, cb);
+gulp.task('customizer:clean', function() {
+  return del(DEFAULTS.tmp);
 });
 
 gulp.task('customizer', function(cb) {

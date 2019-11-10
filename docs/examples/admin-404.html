@@ -6,7 +6,7 @@
   <title>Amaze UI Admin 404 Examples</title>
   <meta name="description" content="这是一个404页面">
   <meta name="keywords" content="404">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="renderer" content="webkit">
   <meta http-equiv="Cache-Control" content="no-siteapp" />
   <link rel="icon" type="image/png" href="assets/i/favicon.png">
@@ -21,7 +21,7 @@
   以获得更好的体验！</p>
 <![endif]-->
 
-<header class="am-topbar admin-header">
+<header class="am-topbar am-topbar-inverse admin-header">
   <div class="am-topbar-brand">
     <strong>Amaze UI</strong> <small>后台管理模板</small>
   </div>
@@ -87,15 +87,17 @@
 
   <!-- content start -->
   <div class="admin-content">
+    <div class="admin-content-body">
+      <div class="am-cf am-padding am-padding-bottom-0">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">404</strong> / <small>That’s an error</small></div>
+      </div>
 
-    <div class="am-cf am-padding">
-      <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">404</strong> / <small>That’s an error</small></div>
-    </div>
+      <hr>
 
-    <div class="am-g">
-      <div class="am-u-sm-12">
-        <h2 class="am-text-center am-text-xxxl am-margin-top-lg">404. Not Found</h2>
-        <p class="am-text-center">没有找到你要的页面</p>
+      <div class="am-g">
+        <div class="am-u-sm-12">
+          <h2 class="am-text-center am-text-xxxl am-margin-top-lg">404. Not Found</h2>
+          <p class="am-text-center">没有找到你要的页面</p>
         <pre class="page-404">
           .----.
        _.'__    `.
@@ -111,14 +113,20 @@
     ___`. | .'___
    (______|______)
         </pre>
+        </div>
       </div>
     </div>
+
+    <footer class="admin-content-footer">
+      <hr>
+      <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+    </footer>
   </div>
   <!-- content end -->
 
 </div>
 
-<a class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
+<a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
 
 <footer>
   <hr>
@@ -128,15 +136,13 @@
 <!--[if lt IE 9]>
 <script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
-<script src="{{assets}}js/polyfill/rem.min.js"></script>
-<script src="{{assets}}js/polyfill/respond.min.js"></script>
-<script src="{{assets}}js/amazeui.legacy.js"></script>
+<script src="{{assets}}js/amazeui.ie8polyfill.min.js"></script>
 <![endif]-->
 
 <!--[if (gte IE 9)|!(IE)]><!-->
 <script src="{{assets}}js/jquery.min.js"></script>
-<script src="{{assets}}js/amazeui.min.js"></script>
 <!--<![endif]-->
+<script src="{{assets}}js/amazeui.min.js"></script>
 <script src="{{assets}}js/app.js"></script>
 </body>
 </html>

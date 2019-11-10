@@ -31,6 +31,7 @@
   border-top: none;
   z-index: 100;
   transition: height .3s;
+  .clearfix();
   .hook-tabs-bd;
 
   .@{ns}tab-panel {
@@ -67,6 +68,31 @@
   }
 }
 
+// #699
+// @since 2.5
+.@{ns}tabs-bd-ofv {
+  overflow: visible;
+
+  > .@{ns}tab-panel {
+    display: none;
+
+    &.@{ns}active {
+      display: block;
+    }
+  }
+}
+
+// fade animation in React version
+.@{ns}tabs-fade {
+  .@{ns}tab-panel {
+    opacity: 0;
+    transition: opacity .25s linear;
+
+    &.@{ns}in {
+      opacity: 1;
+    }
+  }
+}
 
 // HOOKS
 // =============================================================================

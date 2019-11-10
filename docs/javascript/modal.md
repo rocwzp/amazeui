@@ -22,7 +22,12 @@ Modal 交互窗口，可以用来模拟浏览器的 `alert`、`confirm`、`promp
 此 Demo 设置了 `closeViaDimmer`、`width`、`height` 参数。
 
 `````html
-<button class="am-btn am-btn-primary" data-am-modal="{target: '#doc-modal-1', closeViaDimmer: 0, width: 400, height: 225}">Modal</button>
+<button
+  type="button"
+  class="am-btn am-btn-primary"
+  data-am-modal="{target: '#doc-modal-1', closeViaDimmer: 0, width: 400, height: 225}">
+  Modal
+</button>
 
 <div class="am-modal am-modal-no-btn" tabindex="-1" id="doc-modal-1">
   <div class="am-modal-dialog">
@@ -30,6 +35,7 @@ Modal 交互窗口，可以用来模拟浏览器的 `alert`、`confirm`、`promp
       <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
     </div>
     <div class="am-modal-bd">
+      <button class="am-btn am-btn-primary am-fr am-margin-left" data-am-popover="{content: '谁愿压抑心中怒愤冲动，咒骂这虚与伪与假'}">点击显示 Popover</button>
       Modal 内容。本 Modal 无法通过遮罩层关闭。
     </div>
   </div>
@@ -37,7 +43,12 @@ Modal 交互窗口，可以用来模拟浏览器的 `alert`、`confirm`、`promp
 `````
 
 ```html
-<button class="am-btn am-btn-primary" data-am-modal="{target: '#doc-modal-1', closeViaDimmer: 0, width: 400, height: 225}">Modal</button>
+<button
+  type="button"
+  class="am-btn am-btn-primary"
+  data-am-modal="{target: '#doc-modal-1', closeViaDimmer: 0, width: 400, height: 225}">
+  Modal
+</button>
 
 <div class="am-modal am-modal-no-btn" tabindex="-1" id="doc-modal-1">
   <div class="am-modal-dialog">
@@ -54,7 +65,12 @@ Modal 交互窗口，可以用来模拟浏览器的 `alert`、`confirm`、`promp
 ### 模拟 Alert
 
 `````html
-<button class="am-btn am-btn-primary" data-am-modal="{target: '#my-alert'}">Alert</button>
+<button
+  type="button"
+  class="am-btn am-btn-primary"
+  data-am-modal="{target: '#my-alert'}">
+  Alert
+</button>
 
 <div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
   <div class="am-modal-dialog">
@@ -69,7 +85,12 @@ Modal 交互窗口，可以用来模拟浏览器的 `alert`、`confirm`、`promp
 </div>
 `````
 ```html
-<button class="am-btn am-btn-primary" data-am-modal="{target: '#my-alert'}">Alert</button>
+<button
+  type="button"
+  class="am-btn am-btn-primary"
+  data-am-modal="{target: '#my-alert'}">
+  Alert
+</button>
 
 <div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
   <div class="am-modal-dialog">
@@ -89,7 +110,12 @@ Modal 交互窗口，可以用来模拟浏览器的 `alert`、`confirm`、`promp
 点击列表右边的 `x` 查看效果。
 
 `````html
-<button class="am-btn am-btn-warning" id="doc-confirm-toggle">Confirm</button>
+<button
+  type="button"
+  class="am-btn am-btn-warning"
+  id="doc-confirm-toggle">
+  Confirm
+</button>
 
 <style>
   .confirm-list i {
@@ -149,7 +175,12 @@ $(function() {
 </script>
 `````
 ```html
-<button class="am-btn am-btn-warning" id="doc-confirm-toggle">Confirm</button>
+<button
+  type="button"
+  class="am-btn am-btn-warning"
+  id="doc-confirm-toggle">
+  Confirm
+</button>
 
 <ul class="am-list confirm-list" id="doc-modal-list">
   <li><a data-id="1" href="#">每个人都有一个死角， 自己走不出来，别人也闯不进去。</a><i class="am-icon-close"></i></li>
@@ -183,6 +214,7 @@ $(function() {
             '确定了，但不知道要整哪样';
           alert(msg);
         },
+        // closeOnConfirm: false,
         onCancel: function() {
           alert('算求，不弄了');
         }
@@ -193,12 +225,12 @@ $(function() {
 
 **存在问题：**
 
-出于性能考虑，每个 Modal 实例都存储在对应元素的 `$('.am-modal').data('am.modal')` 属性中，`onConfirm`/`onCancel` 会保存第一次运行 Modal 时候的数据，导致在某些场景不能按照预期工作（[#274](https://github.com/allmobilize/amazeui/issues/274#issuecomment-65182344)）。`2.1` 中做了一些处理，但并不是很如意，大家有更好的方案可以提供给我们。
+出于性能考虑，每个 Modal 实例都存储在对应元素的 `$('.am-modal').data('amui.modal')` 属性中，`onConfirm`/`onCancel` 会保存第一次运行 Modal 时候的数据，导致在某些场景不能按照预期工作（[#274](https://github.com/allmobilize/amazeui/issues/274#issuecomment-65182344)）。`2.1` 中做了一些处理，但并不是很如意，大家有更好的方案可以提供给我们。
 
 可以选择的处理方式：
 
 - **法一**：通过 `relatedTarget` 这个钩子获取数据，如上面的演示，以该元素为桥梁获取想要的数据（**2.1 开始支持**）；
-- 法二：按照[**这种方式**](http://jsbin.com/fahawe/1/edit?html,output) 每次都重新给这两个参数赋值；
+- 法二：按照[**这种方式**](http://jsbin.com/fahawe/edit?html,output) 每次都重新给这两个参数赋值；
 - 法三：Confirm 关闭后移除暂存的实例，再次调用时重新初始化；
 
 ```javascript
@@ -234,7 +266,12 @@ Prompt 从 `2.1` 开始支持多个输入框，输入框的值通过参数 `opti
 - 多个输入框时，`options.data` 为数组。
 
 `````html
-<button class="am-btn am-btn-success" id="doc-prompt-toggle">Prompt</button>
+<button
+  type="button"
+  class="am-btn am-btn-success"
+  id="doc-prompt-toggle">
+  Prompt
+</button>
 
 <div class="am-modal am-modal-prompt" tabindex="-1" id="my-prompt">
   <div class="am-modal-dialog">
@@ -266,7 +303,12 @@ $(function() {
 </script>
 `````
 ```html
-<button class="am-btn am-btn-success" id="doc-prompt-toggle">Prompt</button>
+<button
+  type="button"
+  class="am-btn am-btn-success"
+  id="doc-prompt-toggle">
+  Prompt
+</button>
 
 <div class="am-modal am-modal-prompt" tabindex="-1" id="my-prompt">
   <div class="am-modal-dialog">
@@ -303,7 +345,12 @@ $(function() {
 采纳网友意见，Loading 窗口只能通过 JS 关闭。
 
 `````html
-<button class="am-btn am-btn-success" data-am-modal="{target: '#my-modal-loading'}">Modal Loading</button>
+<button
+  type="button"
+  class="am-btn am-btn-success"
+  data-am-modal="{target: '#my-modal-loading'}">
+  Modal Loading
+</button>
 
 <div class="am-modal am-modal-loading am-modal-no-btn" tabindex="-1" id="my-modal-loading">
   <div class="am-modal-dialog">
@@ -315,7 +362,12 @@ $(function() {
 </div>
 `````
 ```html
-<button class="am-btn am-btn-success" data-am-modal="{target: '#my-modal-loading'}">Modal Loading</button>
+<button
+  type="button"
+  class="am-btn am-btn-success"
+  data-am-modal="{target: '#my-modal-loading'}">
+  Modal Loading
+</button>
 
 <div class="am-modal am-modal-loading am-modal-no-btn" tabindex="-1" id="my-modal-loading">
   <div class="am-modal-dialog">
@@ -332,7 +384,12 @@ $(function() {
 结合 [List 组件](/css/list)使用，创建类似 iOS 的操作列表。
 
 `````html
-<button class="am-btn am-btn-secondary" data-am-modal="{target: '#my-actions'}">Actions</button>
+<button
+  type="button"
+  class="am-btn am-btn-secondary"
+  data-am-modal="{target: '#my-actions'}">
+  Actions
+</button>
 
 <div class="am-modal-actions" id="my-actions">
   <div class="am-modal-actions-group">
@@ -349,7 +406,12 @@ $(function() {
 </div>
 `````
 ```html
-<button class="am-btn am-btn-secondary" data-am-modal="{target: '#my-actions'}">Actions</button>
+<button
+  type="button"
+  class="am-btn am-btn-secondary"
+  data-am-modal="{target: '#my-actions'}">
+  Actions
+</button>
 
 <div class="am-modal-actions" id="my-actions">
   <div class="am-modal-actions-group">
@@ -371,7 +433,12 @@ $(function() {
 
 
 `````html
-<button class="am-btn am-btn-danger" data-am-modal="{target: '#my-popup'}">Popup</button>
+<button
+  type="button"
+  class="am-btn am-btn-danger"
+  data-am-modal="{target: '#my-popup'}">
+  Popup
+</button>
 
 <div class="am-popup" id="my-popup">
   <div class="am-popup-inner">
@@ -390,7 +457,12 @@ $(function() {
 `````
 
 ```html
-<button class="am-btn am-btn-danger" data-am-modal="{target: '#my-popup'}">Popup</button>
+<button
+  type="button"
+  class="am-btn am-btn-danger"
+  data-am-modal="{target: '#my-popup'}">
+  Popup
+</button>
 
 <div class="am-popup" id="my-popup">
   <div class="am-popup-inner">
@@ -413,7 +485,11 @@ $(function() {
 在 `<button>`、`<a>` 等元素上添加 `data-am-modal="{target: '#my-modal'}"`，其中 `#my-modal` 为 Modal 窗口容器 ID。
 
 ```html
-<button data-am-modal="{target: '#my-modal'}">My Modal</button>
+<button
+  type="button"
+  data-am-modal="{target: '#my-modal'}">
+  My Modal
+</button>
 ```
 
 ### 通过 JS
@@ -424,9 +500,9 @@ $(function() {
 $('#your-modal').modal(options);
 ```
 `````html
-<button class="am-btn am-btn-primary js-modal-open">打开 Modal</button>
-  <button class="am-btn am-btn-secondary js-modal-close">关闭 Modal</button>
-  <button class="am-btn am-btn-danger js-modal-toggle">Toggle Modal</button>
+<button type="button" class="am-btn am-btn-primary js-modal-open">打开 Modal</button>
+  <button type="button" class="am-btn am-btn-secondary js-modal-close">关闭 Modal</button>
+  <button type="button" class="am-btn am-btn-danger js-modal-toggle">Toggle Modal</button>
 
 <div class="am-modal am-modal-no-btn" tabindex="-1" id="your-modal">
   <div class="am-modal-dialog">
@@ -457,9 +533,9 @@ $(function() {
 `````
 
 ```html
-<button class="am-btn am-btn-primary js-modal-open">打开 Modal</button>
-<button class="am-btn am-btn-secondary js-modal-close">关闭 Modal</button>
-<button class="am-btn am-btn-danger js-modal-toggle">Toggle Modal</button>
+  <button type="button" class="am-btn am-btn-primary js-modal-open">打开 Modal</button>
+  <button type="button" class="am-btn am-btn-secondary js-modal-close">关闭 Modal</button>
+  <button type="button" class="am-btn am-btn-danger js-modal-toggle">Toggle Modal</button>
 
 <div class="am-modal am-modal-no-btn" tabindex="-1" id="your-modal">
   <div class="am-modal-dialog">
@@ -491,42 +567,16 @@ $(function() {
 
 #### 参数说明
 
-<table class="am-table am-table-bordered am-table-striped">
-  <thead>
-  <tr>
-    <th>参数</th>
-    <th>类型</th>
-    <th>描述</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-    <td><code>onConfirm</code></td>
-    <td><code>function</code></td>
-    <td>具有 <code>data-am-modal-confirm</code> 属性的按钮关闭时触发的函数</td>
-  </tr>
-  <tr>
-    <td><code>onCancel</code></td>
-    <td><code>function</code></td>
-    <td>具有 <code>data-am-modal-cancel</code> 属性的按钮关闭时触发的函数</td>
-  </tr>
-  <tr>
-    <td><code>closeViaDimmer</code></td>
-    <td><code>boolean</code></td>
-    <td>点击遮罩层时关闭 Modal，默认为 <code>true</code></td>
-  </tr>
-  <tr>
-    <td><code>width</code></td>
-    <td><code>number</code></td>
-    <td>Modal 宽度，对 Popup 和 Actions 无效</td>
-  </tr>
-  <tr>
-    <td><code>height</code></td>
-    <td><code>number</code></td>
-    <td>Modal 高度，对 Popup 和 Actions 无效</td>
-  </tr>
-  </tbody>
-</table>
+| 参数 | 类型 | 描述 |
+| ----| --- | --- |
+| `onConfirm` | `function` | 具有 <code>data-am-modal-confirm</code> 属性的按钮关闭时触发的函数 |
+| `closeOnConfirm` | `bool` | 具有 <code>data-am-modal-confirm</code> 属性的按钮点击时是否关闭 Modal，默认为 <code>true</code>（<strong>v2.4.1 新增</strong>）|
+| `onCancel` | `function` | 具有 <code>data-am-modal-cancel</code> 属性的按钮关闭时触发的函数 |
+| `closeOnCancel` | `bool` | 具有 <code>data-am-modal-cancel</code> 属性的按钮点击时是否关闭 Modal，默认为 <code>true</code>（<strong>v2.4.1 新增</strong>）|
+| `closeViaDimmer` | `bool` | 点击遮罩层时关闭 Modal，默认为 `true` |
+| `width` | `number` | Modal 宽度，对 Popup 和 Actions 无效 |
+| `height`| `number` | Modal 高度，对 Popup 和 Actions 无效 |
+| `dimmer` | `bool` | 是否显示 Modal 遮罩背景，默认为 `true` (**v2.5**)|
 
 **注意：**
 
@@ -553,7 +603,7 @@ $('#doc-modal-1').on('open.modal.amui', function(){
 
 拷贝上面的代码粘贴到控制台执行，然后每次打开第一个演示弹窗（标题 `1.1` 下面的），控制台都会输出那行文字。
 
-<table class="am-table am-table-bd am-table-striped">
+<table class="am-table am-table-bordered am-table-striped">
   <thead>
   <tr>
     <th>事件名称</th>

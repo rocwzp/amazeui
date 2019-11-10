@@ -71,7 +71,7 @@ Dropdown.prototype.open = function(e) {
 
   $toggle.trigger('focus');
 
-  this.checkDimensions();
+  this.checkDimensions(e);
 
   var complete = $.proxy(function() {
     $element.trigger('opened.dropdown.amui');
@@ -82,7 +82,7 @@ Dropdown.prototype.open = function(e) {
   if (animation) {
     this.animating = 1;
     $dropdown.addClass(this.options.animation).
-      on(animation.end + '.open.dropdown.amui', $.proxy(function() {
+      one(animation.end + '.open.dropdown.amui', $.proxy(function() {
         complete();
         $dropdown.removeClass(this.options.animation);
       }, this));
@@ -127,12 +127,26 @@ Dropdown.prototype.close = function() {
   }
 };
 
-Dropdown.prototype.checkDimensions = function() {
+Dropdown.prototype.enable = function() {
+  this.$toggle.prop('disabled', false);
+},
+
+Dropdown.prototype.disable = function() {
+  this.$toggle.prop('disabled', true);
+},
+
+Dropdown.prototype.checkDimensions = function(e) {
   if (!this.$dropdown.length) {
     return;
   }
 
   var $dropdown = this.$dropdown;
+
+  // @see #873
+  if (e && e.offset) {
+    $dropdown.offset(e.offset);
+  }
+
   var offset = $dropdown.offset();
   var width = $dropdown.outerWidth();
   var boundaryWidth = this.$boundary.width();
@@ -195,25 +209,7 @@ Dropdown.prototype.events = function() {
 };
 
 // Dropdown Plugin
-function Plugin(option) {
-  return this.each(function() {
-    var $this = $(this);
-    var data = $this.data('amui.dropdown');
-    var options = $.extend({},
-      UI.utils.parseOptions($this.attr('data-am-dropdown')),
-      typeof option == 'object' && option);
-
-    if (!data) {
-      $this.data('amui.dropdown', (data = new Dropdown(this, options)));
-    }
-
-    if (typeof option == 'string') {
-      data[option]();
-    }
-  });
-}
-
-$.fn.dropdown = Plugin;
+UI.plugin('dropdown', Dropdown);
 
 // Init code
 UI.ready(function(context) {
@@ -225,9 +221,7 @@ $(document).on('click.dropdown.amui.data-api', '.am-dropdown form',
     e.stopPropagation();
   });
 
-$.AMUI.dropdown = Dropdown;
-
-module.exports = Dropdown;
+module.exports = UI.dropdown = Dropdown;
 
 // TODO: 1. 处理链接 focus
 //       2. 增加 mouseenter / mouseleave 选项

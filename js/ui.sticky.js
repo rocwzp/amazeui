@@ -10,7 +10,7 @@ var UI = require('./core');
 
 // Sticky Class
 var Sticky = function(element, options) {
-  var me = this;
+  var _this = this;
 
   this.options = $.extend({}, Sticky.DEFAULTS, options);
   this.$element = $(element);
@@ -23,8 +23,8 @@ var Sticky = function(element, options) {
     UI.utils.debounce($.proxy(this.checkPosition, this), 10)).
     on('resize.sticky.amui orientationchange.sticky.amui',
     UI.utils.debounce(function() {
-      me.reset(true, function() {
-        me.checkPosition();
+      _this.reset(true, function() {
+        _this.checkPosition();
       });
     }, 50)).
     on('load.sticky.amui', $.proxy(this.checkPosition, this));
@@ -66,7 +66,7 @@ Sticky.prototype.init = function() {
     });
 
   var $holder = $('<div class="am-sticky-placeholder"></div>').css({
-    height: $element.css('position') != 'absolute' ?
+    height: $element.css('position') !== 'absolute' ?
       $element.outerHeight() : '',
     float: $element.css('float') != 'none' ? $element.css('float') : '',
     margin: $elementMargin
@@ -154,7 +154,7 @@ Sticky.prototype.checkPosition = function() {
   var offsetBottom = options.bottom;
   var $element = this.$element;
   var animation = (options.animation) ?
-  ' am-animation-' + options.animation : '';
+    ' am-animation-' + options.animation : '';
   var className = [options.className.sticky, animation].join(' ');
 
   if (typeof offsetBottom == 'function') {
@@ -169,7 +169,10 @@ Sticky.prototype.checkPosition = function() {
     this.reset();
   }
 
-  this.$holder.height($element.is(':visible') ? $element.height() : 0);
+  this.$holder.css({
+    height: $element.is(':visible') && $element.css('position') !== 'absolute' ?
+      $element.outerHeight() : ''
+  });
 
   if (checkResult) {
     $element.css({
@@ -196,34 +199,11 @@ Sticky.prototype.checkPosition = function() {
 };
 
 // Sticky Plugin
-function Plugin(option) {
-  return this.each(function() {
-    var $this = $(this);
-    var data = $this.data('amui.sticky');
-    var options = typeof option == 'object' && option;
-
-    if (!data) {
-      $this.data('amui.sticky', (data = new Sticky(this, options)));
-    }
-
-    if (typeof option == 'string') {
-      data[option]();
-    }
-  });
-}
-
-$.fn.sticky = Plugin;
+UI.plugin('sticky', Sticky);
 
 // Init code
 $(window).on('load', function() {
-  $('[data-am-sticky]').each(function() {
-    var $this = $(this);
-    var options = UI.utils.options($this.attr('data-am-sticky'));
-
-    Plugin.call($this, options);
-  });
+  $('[data-am-sticky]').sticky();
 });
-
-$.AMUI.sticky = Sticky;
 
 module.exports = Sticky;

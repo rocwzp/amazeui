@@ -18,22 +18,20 @@ var Button = function(element, options) {
 
 Button.DEFAULTS = {
   loadingText: 'loading...',
-  className: {
-    loading: 'am-btn-loading',
-    disabled: 'am-disabled'
-  },
+  disabledClassName: 'am-disabled',
+  activeClassName: 'am-active',
   spinner: undefined
 };
 
-Button.prototype.setState = function(state) {
-  var disabled = 'disabled';
+Button.prototype.setState = function(state, stateText) {
   var $element = this.$element;
+  var disabled = 'disabled';
+  var data = $element.data();
   var options = this.options;
   var val = $element.is('input') ? 'val' : 'html';
-  var loadingClassName = options.className.disabled + ' ' +
-    options.className.loading;
+  var stateClassName = 'am-btn-' + state + ' ' + options.disabledClassName;
 
-  state = state + 'Text';
+  state += 'Text';
 
   if (!options.resetText) {
     options.resetText = $element[val]();
@@ -42,22 +40,25 @@ Button.prototype.setState = function(state) {
   // add spinner for element with html()
   if (UI.support.animation && options.spinner &&
     val === 'html' && !this.hasSpinner) {
-    options.loadingText = '<span class="am-icon-' +
-    options.spinner +
-    ' am-icon-spin"></span>' + options.loadingText;
+    options.loadingText = '<span class="am-icon-' + options.spinner +
+      ' am-icon-spin"></span>' + options.loadingText;
 
     this.hasSpinner = true;
   }
 
-  $element[val](options[state]);
+  stateText = stateText ||
+    (data[state] === undefined ? options[state] : data[state]);
+
+  $element[val](stateText);
 
   // push to event loop to allow forms to submit
   setTimeout($.proxy(function() {
-    if (state == 'loadingText') {
-      $element.addClass(loadingClassName).attr(disabled, disabled);
+    // TODO: add stateClass for other states
+    if (state === 'loadingText') {
+      $element.addClass(stateClassName).attr(disabled, disabled);
       this.isLoading = true;
     } else if (this.isLoading) {
-      $element.removeClass(loadingClassName).removeAttr(disabled);
+      $element.removeClass(stateClassName).removeAttr(disabled);
       this.isLoading = false;
     }
   }, this), 0);
@@ -66,72 +67,64 @@ Button.prototype.setState = function(state) {
 Button.prototype.toggle = function() {
   var changed = true;
   var $element = this.$element;
-  var $parent = this.$element.parent('.am-btn-group');
+  var $parent = this.$element.parent('[class*="am-btn-group"]');
+  var activeClassName = Button.DEFAULTS.activeClassName;
 
   if ($parent.length) {
     var $input = this.$element.find('input');
 
     if ($input.prop('type') == 'radio') {
-      if ($input.prop('checked') && $element.hasClass('am-active')) {
+      if ($input.prop('checked') && $element.hasClass(activeClassName)) {
         changed = false;
       } else {
-        $parent.find('.am-active').removeClass('am-active');
+        $parent.find('.' + activeClassName).removeClass(activeClassName);
       }
     }
 
     if (changed) {
       $input.prop('checked',
-        !$element.hasClass('am-active')).trigger('change');
+        !$element.hasClass(activeClassName)).trigger('change');
     }
   }
 
   if (changed) {
-    $element.toggleClass('am-active');
-    if (!$element.hasClass('am-active')) {
+    $element.toggleClass(activeClassName);
+    if (!$element.hasClass(activeClassName)) {
       $element.blur();
     }
   }
 };
 
-// Button plugin
-function Plugin(option) {
-  return this.each(function() {
-    var $this = $(this);
-    var data = $this.data('amui.button');
-    var options = typeof option == 'object' && option || {};
-
-    if (!data) {
-      $this.data('amui.button', (data = new Button(this, options)));
+UI.plugin('button', Button, {
+  dataOptions: 'data-am-loading',
+  methodCall: function(args, instance) {
+    if (args[0] === 'toggle') {
+      instance.toggle();
+    } else if (typeof args[0] === 'string') {
+      instance.setState.apply(instance, args);
     }
-
-    if (option == 'toggle') {
-      data.toggle();
-    } else if (typeof option == 'string') {
-      data.setState(option);
-    }
-  });
-}
-
-$.fn.button = Plugin;
+  }
+});
 
 // Init code
 $(document).on('click.button.amui.data-api', '[data-am-button]', function(e) {
+  e.preventDefault();
   var $btn = $(e.target);
 
   if (!$btn.hasClass('am-btn')) {
     $btn = $btn.closest('.am-btn');
   }
 
-  Plugin.call($btn, 'toggle');
-  e.preventDefault();
+  $btn.button('toggle');
 });
 
 UI.ready(function(context) {
-  $('[data-am-loading]', context).each(function() {
-    $(this).button(UI.utils.parseOptions($(this).data('amLoading')));
+  $('[data-am-loading]', context).button();
+
+  // resolves #866
+  $('[data-am-button]', context).find('input:checked').each(function() {
+    $(this).parent('label').addClass(Button.DEFAULTS.activeClassName);
   });
 });
 
-$.AMUI.button = Button;
-
-module.exports = Button;
+module.exports = UI.button = Button;

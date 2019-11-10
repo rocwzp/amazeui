@@ -1,11 +1,10 @@
 'use strict';
 
 var $ = require('jquery');
-require('./core');
-require('./ui.modal');
-var share = require('./ui.share');
-var QRCode = require('./util.qrcode');
-var UI = $.AMUI;
+var UI = require('../../../js/core');
+var share = require('../../../js/ui.share');
+var QRCode = require('../../../js/util.qrcode');
+require('../../../js/ui.modal');
 
 function navbarInit() {
   var $navBar = $('[data-am-widget="navbar"]');
@@ -157,7 +156,7 @@ function navbarInit() {
 // DOMContent ready
 $(navbarInit);
 
-module.exports = $.AMUI.navbar = {
+module.exports = UI.navbar = {
   VERSION: '2.0.2',
   init: navbarInit
 };
