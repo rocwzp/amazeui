@@ -1,170 +1,321 @@
-<h1><a href="http://amazeui.org/" title="Amaze UI 官网"><img style="float: left" width="240" src="https://raw.githubusercontent.com/allmobilize/amazeui/master/vendor/amazeui/amazeui-b.png" alt="Amaze UI Logo"/></a></h1>
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/OpenNHP/opennhp/blob/master/README.md)
+[![zh-cn](https://img.shields.io/badge/lang-zh--cn-green.svg)](https://github.com/OpenNHP/opennhp/blob/master/README.zh-cn.md)
 
-[![Bower version](https://badge.fury.io/bo/amazeui.svg)](http://badge.fury.io/bo/amazeui)
-[![NPM version](https://badge.fury.io/js/amazeui.svg)](http://badge.fury.io/js/amazeui)
-[![Build Status](https://travis-ci.org/allmobilize/amazeui.svg?branch=master)](https://travis-ci.org/allmobilize/amazeui)
+# OpenNHP: Zero Trust Network Hiding Protocol
 
-Amaze UI 是基于社区开源项目构建的一个跨屏前端框架。 __[README in English](https://github.com/allmobilize/amazeui/blob/master/README_EN.md)__
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+![Version](https://img.shields.io/badge/version-0.0.1-blue)
+![License](https://img.shields.io/badge/license-Apache%202.0-green)
 
-## 功能简介
+![OpenNHP Logo](path_to_logo.png)
 
-### 移动优先
+OpenNHP is an open-source implementation of the Network-infrastructure Hiding Protocol (NHP), a next-generation zero trust security protocol designed to secure network connections and hide infrastructure.
 
-以移动优先（Mobile first）为理念，从小屏逐步扩展到大屏，最终实现所有屏幕适配，适应移动互联潮流。
+---
 
-### 组件丰富，模块化
+## Table of Contents
 
-Amaze UI 含近 20 个 CSS 组件、10 个 JS 组件，更有 17 款包含近 60 个主题的 Web 组件，可快速构建界面出色、体验优秀的跨屏页面，大幅提升开发效率。
+- [Introduction](#introduction)
+- [Key Features](#key-features)
+- [Quick Start](#quick-start)
+- [Installation](#installation)
+- [Usage Example](#usage-example)
+- [Dependencies](#dependencies)
+- [Architecture](#architecture)
+- [Components](#components)
+- [Workflow](#workflow)
+- [Deployment Models](#deployment-models)
+- [Security Benefits](#security-benefits)
+- [Cryptographic Foundations](#cryptographic-foundations)
+- [Comparison to SPA](#comparison-to-spa)
+- [Compatibility](#compatibility)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [Acknowledgments](#acknowledgments)
+- [License](#license)
+- [Contact](#contact)
 
-### 本地化支持
+---
 
-相比国外框架，Amaze UI 关注中文排版，根据用户代理调整字体，实现更好的中文排版效果；兼顾国内主流浏览器及 App 内置浏览器兼容支持。
+## Introduction
 
-### 轻量级，高性能
+OpenNHP implements the Network-infrastructure Hiding Protocol (NHP), which operates at the session layer (layer 5) of the OSI model to enforce zero trust principles. NHP addresses key security challenges:
 
-Amaze UI 面向 HTML5 开发，使用 CSS3 来做动画交互，平滑、高效，更适合移动设备，让 Web 应用更快速载入。
+- Mitigates vulnerability exploitation by enforcing "deny-all" rules by default
+- Prevents phishing attacks through encrypted DNS resolution
+- Protects against DDoS attacks by hiding infrastructure
+- Enables attack attribution through identity-based connections
 
-## 下载及使用
+NHP enhances security, reliability, and scalability compared to previous approaches like Single Packet Authorization (SPA).
 
-用户可以从 [Amaze UI 官网](http://amazeui.org/getting-started) 下载打包好的模板。
+> 🔐 OpenNHP is designed with security-first principles, implementing a true zero-trust architecture.
 
-所有文档存放在 `docs/` 目录下，为方便查看演示效果，建议通过 [Amaze UI 官网](http://amazeui.org/)查看文档。
+---
 
+## Key Features
 
-## 开发及构建
+- Default-deny access control for all protected resources
+- Identity and device-based authentication before network access
+- Encrypted DNS resolution to prevent DNS hijacking
+- Distributed infrastructure to mitigate DDoS attacks
+- Scalable architecture with decoupled components
+- Integration with existing identity and access management systems
+- Support for various deployment models (client-to-gateway, client-to-server, etc)
+- Cryptographically secure using modern algorithms (ECC, Noise Protocol, IBC)
 
-用户可以在 Amaze UI 的基础上进行二次开发。
+<details>
+<summary>Click to expand feature details</summary>
 
-### 目录结构
+- **Default-deny access control**: All resources are hidden by default, only becoming accessible after authentication and authorization.
+- **Identity and device-based authentication**: Ensures that only known users on approved devices can gain access.
+- **Encrypted DNS resolution**: Prevents DNS hijacking and associated phishing attacks.
+- **DDoS mitigation**: Distributed infrastructure design helps protect against Distributed Denial of Service attacks.
+- **Scalable architecture**: Decoupled components allow for flexible deployment and scaling.
+- **IAM integration**: Works with your existing Identity and Access Management systems.
+- **Flexible deployment**: Supports various models including client-to-gateway, client-to-server, and more.
+- **Strong cryptography**: Utilizes modern algorithms like ECC, Noise Protocol, and IBC for robust security.
 
+</details>
+
+---
+
+## Quick Start
+
+Get OpenNHP up and running in minutes:
+
+```bash
+git clone https://github.com/opennhp/nhp.git
+cd nhp
+make
+./nhp-server run
 ```
-amazeui
-|-- HISTORY.md
-|-- LICENSE
-|-- README.md
-|-- package.json
-|-- dist        # 构建目录
-|-- docs        # 文档
-|-- fonts       # Icon font，目前使用了 http://staticfile.org/
-|-- gulpfile.js # 构建配置文件
-|-- js          # JS 文件
-|-- less        # LESS 文件
-|-- tools       # 相关工具
-|-- vendor
-`-- widget      # Web 组件
+
+---
+
+## Installation
+
+Detailed installation instructions:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/opennhp/nhp.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd nhp
+   ```
+3. Build the project:
+   ```bash
+   make
+   ```
+4. Install (optional):
+   ```bash
+   sudo make install
+   ```
+
+> ⚠️ Note: Running `sudo make install` requires root privileges. Make sure you trust the source before running this command.
+
+---
+
+## Usage Example
+
+Here's a simple example of using OpenNHP to secure a connection:
+
+```python
+from opennhp import NHPClient
+
+client = NHPClient("config.yaml")
+connection = client.connect("protected-resource-id")
+response = connection.send("Hello, secure world!")
+print(response)
 ```
 
-### 构建工具
+---
 
-Amaze UI 使用 [gulp.js](http://gulpjs.com/) 构建项目。
+## Dependencies
 
-首先全局安装 Gulp：
+OpenNHP requires the following major dependencies:
 
-```
-npm install -g gulp
-```
+| Dependency | Minimum Version |
+|------------|-----------------|
+| OpenSSL    | 1.1.1           |
+| Boost      | 1.66            |
+| Protocol Buffers | 3.0       |
 
-Clone 项目文件:
+---
 
-```
-git clone https://github.com/allmobilize/amazeui.git
-```
+## Architecture
 
-然后进入目录安装依赖：
+OpenNHP follows a modular architecture with the following core components:
 
-```
-npm install
-```
+- NHP-Agent: Client-side component that initiates requests
+- NHP-Server: Processes requests and manages authentication
+- NHP-AC: Enforces access policies on protected resources
 
-接下来，执行 `gulp`：
+These interact with:
 
-```
-gulp
-```
+- Protected Resources: Applications, servers, network devices to be secured
+- Authorization Service Provider: Validates access policies
 
-## Bug 反馈及需求提交
+---
 
-### Bug 反馈
+## Components
 
-欢迎给 Amaze UI [提交 Bug](https://github.com/allmobilize/amazeui/issues/new?title=Bug%3A%20&body=**%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0**%0A%0A%EF%BC%88%E6%8F%8F%E8%BF%B0%E4%B8%80%E4%B8%8B%E9%97%AE%E9%A2%98%EF%BC%89%0A%0A**%E4%BA%A7%E7%94%9F%E7%8E%AF%E5%A2%83**%0A%0A-%20%E8%AE%BE%E5%A4%87%EF%BC%9A%EF%BC%88%E6%89%8B%E6%9C%BA%E3%80%81%E5%B9%B3%E6%9D%BF%E7%AD%89%E7%A7%BB%E5%8A%A8%E8%AE%BE%E5%A4%87%E6%97%B6%E5%A1%AB%E5%86%99%E6%AD%A4%E9%A1%B9%EF%BC%89%0A-%20%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%8F%8A%E7%89%88%E6%9C%AC%EF%BC%9A%0A-%20%E6%B5%8F%E8%A7%88%E5%99%A8%E5%8F%8A%E7%89%88%E6%9C%AC%EF%BC%9A%0A-%20%E6%BC%94%E7%A4%BA%E5%9C%B0%E5%9D%80%EF%BC%9A%0A%0A**%E5%A4%8D%E7%8E%B0%E6%AD%A5%E5%A5%8F**%0A%0A1.%20%0A2.%20%0A...)。
+### NHP-Agent
 
-为了能最准确的传达所描述的问题， 建议你在反馈时附上演示，方便我们理解。
+The NHP-Agent is a client-side component that initiates communication and requests access to protected resources. It can be implemented as:
 
-下面的几个链接是我们在几个在线调试工具上建的页面， 已经引入了 Amaze UI 样式和脚本，你可以【Fork】一份，把要有问题的场景粘在里面，反馈给我们。
+- A standalone client application
+- An SDK integrated into existing applications
+- A browser plugin
+- A mobile app
 
-- [Debug Amaze UI 2.x in JSBin](http://jsbin.com/zoqaba/1/edit?html,output)
-- [Debug Amaze UI 1.x in JSBin](http://jsbin.com/qasoxibuje/1/edit?html,output)
+The agent is responsible for:
 
-### 需求提交
+- Generating and sending knock requests to the NHP-Server
+- Maintaining secure communication channels
+- Handling authentication flows
 
-用户可以通过 Issue 系统或者官网留言提交需求，符合 Amaze UI 理念的需求我们都会考虑。
+### NHP-Server
 
-## 贡献代码
+The NHP-Server is the central controller that:
 
-欢迎大家加入捉虫队伍，同时大家也可以分享自己的开发的 Web 组件。Fork 本项目，然后提交 Pull Request 即可。
+- Processes and validates knock requests from agents
+- Interacts with the Authorization Service Provider for policy decisions
+- Manages NHP-AC components to allow/deny access
+- Handles key management and cryptographic operations
 
-如果你没有相关经验，建议先阅读下面的文章：
+It can be deployed in a distributed or clustered configuration for high availability and scalability.
 
-- [Contributing to Open Source on GitHub](https://guides.github.com/activities/contributing-to-open-source/)
-- [The Beginner’s Guide to Contributing to Open Source Projects](http://blog.newrelic.com/2014/05/05/open-source_gettingstarted/)
-- [How to Start Contributing to Open Source](http://www.developer.com/open/how-to-start-contributing-to-open-source.html)
+### NHP-AC
 
-### 我们希望用户参与的项目
+NHP-AC (Access Control) components enforce access policies on protected resources. Key functions:
 
-- 把使用 Amaze UI 的项目提交给我们，能获得一定的展示量，同时能给其他用户提供参考；
-- SCSS 等其他 CSS 扩展语言的支持：通过编写自动转换脚本实现，人工迁移同步更新成本太高；
-- 使用 Amaze UI 开发制作模板；
-- Angular.js、Ember.js、Meteor 等框架的支持；
-- 基于 Amaze UI 样式开发 JavaScript 插件，可以把 Bootstrap 的插件移植到 Amaze UI；
-- 兼容性测试，我们的测试只能覆盖有限，需要更多用户参与，包括浏览器、WebView 等不同的用户代理；
-- ...
+- Implement default deny-all rules
+- Open/close access based on NHP-Server instructions
+- Ensure network invisibility of protected resources
+- Log access attempts
 
-### 开发文档
+---
 
-开发文档存放在 `docs/styleguide` 目录下，也可以通过 [Amaze UI 官网](http://amazeui.org/)查看：
+## Workflow
 
-- [Amaze UI HTML/CSS 编写规范](http://amazeui.org/getting-started/html-css)
-- [Amaze UI JavaScript 编写规范](http://amazeui.org/getting-started/javascript)
-- [Amaze UI Web 组件开发规范](http://amazeui.org/getting-started/widget)
+1. `NHP-Agent` sends knock request to `NHP-Server`
+2. `NHP-Server` validates request and retrieves agent info
+3. `NHP-Server` queries Authorization Service Provider
+4. If authorized, `NHP-Server` instructs `NHP-AC` to allow access
+5. `NHP-AC` opens connection and notifies `NHP-Server`
+6. `NHP-Server` provides resource access details to `NHP-Agent`
+7. `NHP-Agent` can now access the protected resource
+8. Access is logged for auditing purposes
 
-## 参考、使用的项目
+---
 
-* [Zepto.js](https://github.com/madrobby/zepto) ([MIT
-License](https://github.com/madrobby/zepto/blob/master/MIT-LICENSE))
-* [Sea.js](https://github.com/seajs/seajs) ([MIT License](https://github.com/seajs/seajs/blob/master/LICENSE.md))
-* [Handlebars.js](https://github.com/wycats/handlebars.js) ([MIT
-License](https://github.com/wycats/handlebars.js/blob/master/LICENSE))
-* [normalize.css](https://github.com/necolas/normalize.css) ([MIT
-License](https://github.com/necolas/normalize.css/blob/master/LICENSE.md))
-* [FontAwesome](https://github.com/FortAwesome/Font-Awesome/) ([CC BY 3.0 License](http://creativecommons.org/licenses/by/3.0/))
-* [Bootstrap](https://github.com/twbs/bootstrap) ([MIT License](https://github.com/twbs/bootstrap/blob/master/LICENSE))
-* [UIkit](https://github.com/uikit/uikit) ([MIT License](https://github.com/uikit/uikit/blob/master/LICENSE.md))
-* [Foundation](https://github.com/zurb/foundation) ([MIT
-License](https://github.com/zurb/foundation/blob/master/LICENSE))
-* [Framework7](https://github.com/nolimits4web/Framework7) ([MIT
-License](https://github.com/nolimits4web/Framework7/blob/master/LICENSE))
-* [Alice](https://github.com/aliceui/aliceui.org/) ([MIT
-License](https://github.com/aliceui/aliceui.org/blob/master/LICENSE))
-* [Arale](https://github.com/aralejs/aralejs.org/) ([MIT
-License](https://github.com/aralejs/aralejs.org/blob/master/LICENSE))
-* [Pure](https://github.com/yui/pure) ([BSD License](https://github.com/yui/pure/blob/master/LICENSE.md))
-* [Semantic UI](https://github.com/Semantic-Org/Semantic-UI) ([MIT
-License](https://github.com/Semantic-Org/Semantic-UI/blob/master/LICENSE.md))
-* [FastClick](https://github.com/ftlabs/fastclick) ([MIT
-License](https://github.com/ftlabs/fastclick/blob/master/LICENSE))
-* [screenfull.js](https://github.com/sindresorhus/screenfull.js) ([MIT
-License](https://github.com/sindresorhus/screenfull.js/blob/gh-pages/license))
-* [FlexSlider](https://github.com/woothemes/FlexSlider) ([GPL 2.0](http://www.gnu.org/licenses/gpl-2.0.html))
-* [Hammer.js](https://github.com/hammerjs/hammer.js) ([MIT License](https://github.com/hammerjs/hammer.js/blob/master/LICENSE.md))
-* [Flat UI](https://github.com/designmodo/Flat-UI) ([CC BY 3.0 and MIT License](https://github.com/designmodo/Flat-UI#copyright-and-license))
-* [store.js](https://github.com/marcuswestin/store.js) ([MIT License](https://github.com/marcuswestin/store.js/blob/master/LICENSE))
-* [bootstrap-datepicker.js](http://www.eyecon.ro/bootstrap-datepicker/) ([Apache License 2.0](http://www.eyecon.ro/bootstrap-datepicker/js/bootstrap-datepicker.js))
-* [iScroll](http://iscrolljs.com/) ([MIT License](http://iscrolljs.com/#license))
+## Deployment Models
 
-可能会有部分项目遗漏，我们会不断整理更新。
+OpenNHP supports multiple deployment models to suit different use cases:
 
-### Developed with Open Source Licensed [WebStorm](http://www.jetbrains.com/webstorm/)
+- Client-to-Gateway: Secures access to multiple servers behind a gateway
+- Client-to-Server: Directly secures individual servers/applications
+- Server-to-Server: Secures communication between backend services
+- Gateway-to-Gateway: Secures site-to-site connections
 
-<a href="http://www.jetbrains.com/webstorm/" target="_blank">
-<img src="http://ww1.sinaimg.cn/large/005yyi5Jjw1elpp6svs2eg30k004i3ye.gif" width="240" />
-</a>
+---
+
+## Security Benefits
+
+- Reduces attack surface by hiding infrastructure
+- Prevents unauthorized network reconnaissance
+- Mitigates vulnerability exploitation
+- Stops phishing via encrypted DNS
+- Protects against DDoS attacks
+- Enables fine-grained access control
+- Provides identity-based connection tracking
+
+---
+
+## Cryptographic Foundations
+
+OpenNHP leverages state-of-the-art cryptographic algorithms:
+
+- Elliptic Curve Cryptography (ECC): For efficient public key operations
+- Noise Protocol Framework: For secure key exchange and identity verification
+- Identity-Based Cryptography (IBC): For simplified key management at scale
+
+---
+
+## Comparison to SPA
+
+NHP offers several advantages over Single Packet Authorization (SPA):
+
+- Decoupled architecture improves scalability
+- Bidirectional communication increases reliability
+- Modern cryptographic primitives enhance security
+- More comprehensive infrastructure hiding capabilities
+- Extensible design supports various use cases
+- Interoperable with existing protocols and systems
+
+---
+
+## Compatibility
+
+OpenNHP is designed for broad compatibility:
+
+### Cryptographic Algorithms
+
+- International algorithms: Curve25519, AES, SHA256
+
+### Operating Systems
+
+- Windows
+- macOS
+- Linux (various distributions)
+- iOS
+- Android
+
+### CPU Architectures
+
+- x86
+- ARM
+- RISC-V
+- MIPS
+
+---
+
+## Roadmap
+
+Our plans for the near future include:
+
+- 
+
+---
+
+## Contributing
+
+We welcome contributions to OpenNHP! Please see our [Contributing Guidelines](CONTRIBUTING.md) for more information on how to get involved.
+
+---
+
+## Acknowledgments
+
+We'd like to thank the Cloud Security Alliance for their work on the SDP specification, which inspired many aspects of NHP.
+
+---
+
+## License
+
+OpenNHP is released under the [Apache 2.0 License](LICENSE).
+
+---
+
+## Contact
+
+- Project Website: [https://opennhp.org](https://opennhp.org)
+- Mailing List: community@opennhp.org
+- Slack Channel: [Join our Slack](https://slack.opennhp.org)
+
+For more detailed documentation, please visit our [Official Documentation](https://docs.opennhp.org).
+
+---
+
+🌟 Thank you for your interest in OpenNHP! We look forward to your contributions and feedback.
